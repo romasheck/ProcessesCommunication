@@ -10,6 +10,7 @@
 #include <assert.h>
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <unistd.h>
 
 //#include "file_work.h"
 
@@ -145,12 +146,15 @@ static type_t PopDish ()
     printf ("i recieved table with %d dishes:\n", table.num);
     printf ("%s\n", (char*)table.types);
     table.num--;
-    //*((char*)(table.types + table.num)) = '\0';
+    //*((char*)(table.types + table.num + 1)) = '=';
     //printf ("table.num = %d\n", table.num);
     //printf ("%d symbols-->%s\n", table.num*sizeof(type_t), table.types);
+    type_t result = table.types[table.num];
+    //table.num--;
     SentTypesArray(table);
-    printf("i poped dish %u\n", table.types[table.num]);
-    return table.types[table.num];
+    printf("i poped dish %u\n", result);
+    
+    return result;
 }
 
 static types_array GetTypesArray ()
@@ -194,13 +198,16 @@ static types_array GetTypesArray ()
 
 static int SentTypesArray (const types_array table)
 {
+    FILE *file = fopen("file", "w");
+    fclose(file);
+    
     int file_id = open (FILE_NAME, O_WRONLY);
     if (file_id == -1)
     {
         assert ("File not opened!" && NULL);
     }
-
-    int writen_sz = write(file_id, (char*)table.types, table.num*sizeof(table.types[0]));
+    printf ("on the table %d dishes before writing", table.num);
+    int writen_sz = write(file_id, (char*)table.types, table.num*sizeof(type_t));
     if (writen_sz != table.num*sizeof(table.types[0]))
     {
         assert ("Sizes are diiferentf" && NULL);
