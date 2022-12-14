@@ -15,7 +15,7 @@
 
 #include "table.h"
 
-#define FILE_NAME "file"
+#define FILE_NAME "/home/princep/PROGS/Computers_teq/TaskTwoZadavalnik/TheOne/file" 
 
 //size_t num_dishes_on_table = 0;
 
@@ -25,6 +25,7 @@ typedef struct
     type_t* types;
     size_t num;
 } types_array;
+
 static int          PushDish        (const type_t type);
 static type_t       PopDish         ();
 static types_array  GetTypesArray   ();
@@ -32,17 +33,19 @@ static int          SentTypesArray  (const types_array table);
 
 /*************************WORK_WITH_SEMAFS*********************************/
 
-struct sembuf mybuf; 
-
 static int semid = 0;
 
 static int sem_op(int i, int op)               
 {
+    struct sembuf mybuf = {};
+
+    printf ("semid = %d, sem_num = %d, sem_op = %d \n", semid, i, op);
     mybuf.sem_flg = 0;                  
     mybuf.sem_num = i;                  
-    mybuf.sem_op = op;                  
+    mybuf.sem_op = op;
+                       
     if (semop(semid, &mybuf, 1) < 0)    
-    {                                   
+    {        
         assert("wrong semop" && NULL);  
     }
 }
@@ -57,7 +60,7 @@ enum SEMAFS
     FREE = 1,
 };
 
-int StartTableWork ()
+int StartTableWork (const int process)
 {
     key_t key = ftok(FILE_NAME, 0);
     if (key < 0)
@@ -71,17 +74,35 @@ int StartTableWork ()
         assert("wrong semget" && NULL);
     }
 
-    A(FREE, TABLE_LIMIT);
+    switch (process)
+    {
+    case WASHER_P:
+        A(FREE, TABLE_LIMIT);
+        break;
+
+    case WHIPER_P:
+        break;
+
+    default:
+        assert ("undefined process!" && NULL);
+        break;
+    }
+
+    return 0;
 }
 
 int WaitingWhileTableFull ()
 {
     P(FREE);
+
+    return 0;
 }
 
 int WaitingWhileTableEmpty  ()
 {
     P(FILLED);
+
+    return 0;
 }
 
 int PutDish (const type_t type)
@@ -89,6 +110,8 @@ int PutDish (const type_t type)
     PushDish(type);
 
     V(FILLED);
+
+    return 0;
 }
 
 type_t TakeDish ()
@@ -105,8 +128,11 @@ type_t TakeDish ()
 static int PushDish (const type_t type)
 {
     types_array table = GetTypesArray();
+
     table.types[table.num] = type;
     table.num++;
+    //printf("i am push dish %u\n", type);
+
     SentTypesArray(table);
 
     return 0;
@@ -115,10 +141,16 @@ static int PushDish (const type_t type)
 static type_t PopDish ()
 {
     types_array table = GetTypesArray();
+    
+    printf ("i recieved table with %d dishes:\n", table.num);
+    printf ("%s\n", (char*)table.types);
     table.num--;
+    //*((char*)(table.types + table.num)) = '\0';
+    //printf ("table.num = %d\n", table.num);
+    //printf ("%d symbols-->%s\n", table.num*sizeof(type_t), table.types);
     SentTypesArray(table);
-
-    return table.types[table.num + 1];
+    printf("i poped dish %u\n", table.types[table.num]);
+    return table.types[table.num];
 }
 
 static types_array GetTypesArray ()
@@ -132,7 +164,7 @@ static types_array GetTypesArray ()
     struct stat FileInfo;
     stat(FILE_NAME, &FileInfo);
     int file_sz = FileInfo.st_size;
-    if (file_sz < 1)
+    if (file_sz < 0)
     {
         assert ("Empty file" && NULL);
     }
@@ -153,7 +185,9 @@ static types_array GetTypesArray ()
     {
         assert("whaaaaaat" && NULL);
     }
-    //printf("%s", buf);
+
+    //printf("%d\n", buffer_sz/sizeof(type_t));
+    
     types_array result = {buf, buffer_sz/sizeof(type_t)};
     return result;
 }
@@ -166,49 +200,19 @@ static int SentTypesArray (const types_array table)
         assert ("File not opened!" && NULL);
     }
 
-    /*struct stat FileInfo;
-    stat(FILE_NAME, &FileInfo);
-    int file_sz = FileInfo.st_size;
-    if (file_sz < 1)
-    {
-        assert ("Empty file" && NULL);
-    }*/
-
-    int writen_sz = write(file_id, (char*)table.types, table.num);
-    if (writen_sz != table.num)
+    int writen_sz = write(file_id, (char*)table.types, table.num*sizeof(table.types[0]));
+    if (writen_sz != table.num*sizeof(table.types[0]))
     {
         assert ("Sizes are diiferentf" && NULL);
     }
+
+    printf ("i wrote %d bytes\n", writen_sz);
+    //printf("%s\n", (char*)table.types);
 
     if (close (file_id) == -1)
     {
         printf("Bad closing\n");
     }
-    //printf("%s", buf);
+    
     return writen_sz;
 } 
-/*
-int TableStatus ()
-{
-    if (num_dishes_on_table < 0)
-    {
-        assert ("wrong num_dishes_on_yhe_table" && NULL);
-    }
-    if (num_dishes_on_table == 0)
-    {
-        return EMPTY;
-    }
-    else
-    {
-        if (num_dishes_on_table < TABLE_LIMIT)
-        {
-            return NOT_ENF;
-        }
-        else 
-        {
-            return FULL;
-        }
-    } 
-}
-*/
-//#endif

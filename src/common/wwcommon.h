@@ -13,6 +13,8 @@
         dish_t* dishes_types = ReadTypesOfDishes(file_name)
 #define TIME_EXE(type) \
         GetTimeExe (type, dishes_types)
+#define PRINT_DISHES_TYPES \
+        PrintDishesTypes(dishes_types)
 
 #define MAX_NUM_OF_DISHES_TYPES 100
 #define MAX_LEN_OF_TYPES_NAME   20
@@ -26,15 +28,11 @@ typedef struct
     time_exe_t time_exe;
 } dish_t;
 
-typedef struct
-{
-    size_t dishes_num;
-    dish_t* dishes; 
-} dishes_array;
+dish_t*         ReadTypesOfDishes       (const char* file_name);
 
-dish_t*     ReadTypesOfDishes       (const char* file_name);
+uint32_t        GetTimeExe              (type_t found_type, dish_t* dishes_types);
 
-uint32_t    GetTimeExe              (type_t found_type, dish_t* dishes_types);
+int             PrintDishesTypes        (const dish_t* dishes_types);
 
 #define HASH_DISHE_TYPE(str, len) \
         Jenkins_one_at_a_time_hash(str, len)

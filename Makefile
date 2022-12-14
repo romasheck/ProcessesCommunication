@@ -34,14 +34,20 @@ $(OBJ_DIR)/hash.o:
 $(OBJ_DIR)/table.o:
 	$(CC) $(SRC_TABLE_DIR)/table.c -c -D$(COMPILER_KEY) -c $< -o $@
 
+washing: $(objects)
+	$(CC) $(SRC_WASHER_DIR)/*.c $(objects) -o $(OUT_DIR)/washer.out
+	$(CC) $(SRC_WHIPER_DIR)/*.c $(objects) -o $(OUT_DIR)/whiper.out
+
 #$(OBJ_DIR)/%.o: $(SRC_COMMON_DIR)/%.c
 #	$(CC) -c $< -o $@
 
-washer_on: washer
+washer_on:
 	./$(OUT_DIR)/washer.out
 
-whiper_on: whiper
+whiper_on:
 	./$(OUT_DIR)/whiper.out
+
+washing_on: washer_on whiper_on
 
 clean_obj:
 	rm $(OBJ_DIR)/*
@@ -49,6 +55,12 @@ clean_obj:
 clean_out:
 	rm $(OUT_DIR)/*
 
+clean_tmp:
+	ipcrm
+	cat emty > file
+
 clean_all:
 	rm $(OBJ_DIR)/*
 	rm $(OUT_DIR)/*
+	ipcrm
+	cat emty>file

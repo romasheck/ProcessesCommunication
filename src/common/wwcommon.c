@@ -17,6 +17,7 @@ dish_t* ReadTypesOfDishes (const char* file_name)
     while (buffer [i] != '\0')
     {
         i += GetDishType(buffer + i, dishes_types + cur_dish_num);
+        i++;//skip \n
         cur_dish_num++;
     }
 
@@ -65,6 +66,7 @@ uint32_t GetTimeExe (type_t found_type, dish_t* dishes_types)
 
 static dish_t FindType (const type_t found_type, dish_t* dishes_types)
 {
+    if (found_type == 0) assert ("wrong type 0" && NULL);
     for (size_t i = 0; i < MAX_NUM_OF_DISHES_TYPES; i++)
     {
         if (TYPE(i) != found_type) continue;
@@ -72,4 +74,15 @@ static dish_t FindType (const type_t found_type, dish_t* dishes_types)
     }
     
     assert ("wrong finding dish" && NULL);
+}
+
+int PrintDishesTypes (const dish_t* dishes_types)
+{
+    printf ("dishes types ->\n");
+    int i = 0;
+    while (*(char*)(dishes_types + i) != '\0')
+    {
+        printf("<%u>:<%u>\n", dishes_types[i].type, dishes_types[i].time_exe);
+        i++;
+    }
 }

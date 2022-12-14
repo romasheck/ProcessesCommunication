@@ -8,14 +8,13 @@
 
 typedef uint32_t type_t;
 
-enum TABLE_STATUSES
+enum PROCESS
 {
-    FULL,
-    EMPTY,
-    NOT_ENF
+    WASHER_P,
+    WHIPER_P
 };
 
-int         StartTableWork          ();
+int         StartTableWork          (const int process);
 
 int         TableStatus             ();
 

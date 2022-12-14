@@ -11,7 +11,7 @@ char* my_fread (const char * file_name)
     struct stat FileInfo;
     stat(file_name, &FileInfo);
     int file_sz = FileInfo.st_size;
-    if (file_sz < 1)
+    if (file_sz < 0)
     {
         assert ("Empty file" && NULL);
     }
