@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <inttypes.h>
 
-#include "wwcommon.h"
-#include "file_work.h"
+#include "/home/princep/PROGS/Computers_teq/TaskTwoZadavalnik/TheOne/src/common/wwcommon.h"
+#include "/home/princep/PROGS/Computers_teq/TaskTwoZadavalnik/TheOne/src/table/table.h"
 
 #define DISHES_TYPES_FILE "dishes_types.txt"
 

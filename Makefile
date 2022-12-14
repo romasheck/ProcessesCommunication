@@ -1,22 +1,54 @@
-.PHONY: washer clean
-
 CC = gcc
 
-SRC_COMMON 	= src_common/
-SRC_TABLE 	= src_table/
-SRC_WASHER 	= src_washer/
-SRC_WHIPER 	= src_whiper/
+SRC_COMMON_DIR 	= src/common
+SRC_TABLE_DIR 	= src/table
+SRC_WASHER_DIR 	= src/washer
+SRC_WHIPER_DIR 	= src/whiper
 
-COMPILER_KEY  ?= SEMAF
+OBJ_DIR = build/obj
+OUT_DIR = build/out
 
-washer: $(SRC_WASHER)*.c
-	$(CC) $(SRC_WASHER)*.c $(SRC_COMMON)*.o $(SRC_TABLE)*.o -o washer_test.out
+objects = $(addprefix $(OBJ_DIR)/, wwcommon.o file_work.o hash.o table.o)
 
-common.o: $(SRC_COMMON)*.c
-	$(CC) $(SRC_COMMON)*.c -c -o $(SRC_COMMON)*.o
+COMPILER_KEY ?= SEMAF
 
-table.o: $(SRC_TABLE)*.c
-	$(CC) $(SRC_TABLE)*.c -c -o $(SRC_TABLE)*.o -D$(COMPILER_KEY)
+all:
+	echo "U cann't use me without purpose."
+	echo "Valid purposes: washer, whiper, washer_on, whiper_on, clean_obj, clean_out, clean_all"
 
-clean:
-	rm -rf *.o
+washer: $(objects)
+	$(CC) $(SRC_WASHER_DIR)/*.c $(objects) -o $(OUT_DIR)/washer.out
+
+whiper: $(objects)
+	$(CC) $(SRC_WHIPER_DIR)/*.c $(objects) -o $(OUT_DIR)/whiper.out
+
+$(OBJ_DIR)/wwcommon.o:
+	$(CC) $(SRC_COMMON_DIR)/wwcommon.c -c $< -o $@
+
+$(OBJ_DIR)/file_work.o:
+	$(CC) $(SRC_COMMON_DIR)/file_work.c -c $< -o $@
+
+$(OBJ_DIR)/hash.o:
+	$(CC) $(SRC_COMMON_DIR)/hash.c -c $< -o $@
+
+$(OBJ_DIR)/table.o:
+	$(CC) $(SRC_TABLE_DIR)/table.c -c -D$(COMPILER_KEY) -c $< -o $@
+
+#$(OBJ_DIR)/%.o: $(SRC_COMMON_DIR)/%.c
+#	$(CC) -c $< -o $@
+
+washer_on: washer
+	./$(OUT_DIR)/washer.out
+
+whiper_on: whiper
+	./$(OUT_DIR)/whiper.out
+
+clean_obj:
+	rm $(OBJ_DIR)/*
+
+clean_out:
+	rm $(OUT_DIR)/*
+
+clean_all:
+	rm $(OBJ_DIR)/*
+	rm $(OUT_DIR)/*
