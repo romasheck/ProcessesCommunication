@@ -7,6 +7,7 @@ SRC_WHIPER_DIR 	= src/whiper
 
 OBJ_DIR = build/obj
 OUT_DIR = build/out
+TMP_DIR = tmp
 
 objects = $(addprefix $(OBJ_DIR)/, wwcommon.o file_work.o hash.o table.o)
 
@@ -57,10 +58,11 @@ clean_out:
 
 clean_tmp:
 	ipcrm
-	cat emty > file
+	cat $(TMP_DIR)/emty > $(TMP_DIR)/file
 
-clean_all:
-	rm $(OBJ_DIR)/*
-	rm $(OUT_DIR)/*
-	ipcrm
-	cat emty>file
+clean_all: clean_obj clean_out clean_tmp
+#
+#	rm $(OBJ_DIR)/*
+#	rm $(OUT_DIR)/*
+#	ipcrm
+#	cat $(TMP_DIR)/emty>$(TMP_DIR)/file

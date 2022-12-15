@@ -1,7 +1,8 @@
 #ifndef TABLE_H_INCLUDED
 #define TABLE_H_INLUDED
 
-#include <stdlib.h>
+#include <stdio.h>
+//#include <stdlib.h>
 #include <inttypes.h>
 
 #define TABLE_LIMIT 100
@@ -11,7 +12,8 @@ typedef uint32_t type_t;
 enum PROCESS
 {
     WASHER_P,
-    WHIPER_P
+    WHIPER_P,
+    NOT_A_P
 };
 
 int         StartTableWork          (const int process);

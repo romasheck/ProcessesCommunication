@@ -23,8 +23,8 @@
 //prototypes of static funcs for work with file like stack
 typedef struct
 {
-    type_t* types;
     size_t num;
+    type_t* types;
 } types_array;
 
 static int          PushDish        (const type_t type);
@@ -145,8 +145,8 @@ static type_t PopDish ()
     
     printf ("i recieved table with %d dishes:\n", table.num);
     printf ("%s\n", (char*)table.types);
+    //*((char*)(&table.types[table.num])) = EOF;
     table.num--;
-    //*((char*)(table.types + table.num + 1)) = '=';
     //printf ("table.num = %d\n", table.num);
     //printf ("%d symbols-->%s\n", table.num*sizeof(type_t), table.types);
     type_t result = table.types[table.num];
@@ -192,7 +192,7 @@ static types_array GetTypesArray ()
 
     //printf("%d\n", buffer_sz/sizeof(type_t));
     
-    types_array result = {buf, buffer_sz/sizeof(type_t)};
+    types_array result = {buffer_sz/sizeof(type_t), buf};
     return result;
 }
 
