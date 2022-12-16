@@ -8,6 +8,8 @@
 #include "../common/wwcommon.h"
 #include "../table/table.h"
 
+#define PRINT_LINE printf("I am at the line %d\n", __LINE__);
+
 #define DISHES_TYPES_FILE "/home/princep/PROGS/Computers_teq/TaskTwoZadavalnik/TheOne/dishes_types.txt"
 #define DIRTY_DISHES_FILE "/home/princep/PROGS/Computers_teq/TaskTwoZadavalnik/TheOne/dirty_dishes.txt"
 

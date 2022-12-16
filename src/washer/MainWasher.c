@@ -8,8 +8,9 @@ int main ()
     //printf("I am at the line %d\n", __LINE__);
     GET_DISHES_TYPES(DISHES_TYPES_FILE);
     //printf("%d %d\n", *((int*)dishes_types), *((int*)dishes_types + 1));
+    //PRINT_LINE
     dishes_array dirty_dishes = GetDirtyDishes(DIRTY_DISHES_FILE);
-
+    //PRINT_LINE
     //PRINT_DISHES_TYPES;
     //PrintDirtyDishes(dirty_dishes);
     //printf ("num of dirty dishes eq %d\n", dirty_dishes.dishes_num);

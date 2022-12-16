@@ -1,6 +1,6 @@
 #include "washer.h"
 
-static uint32_t GetDirtyDish (const char* buf, type_t* dish);
+static uint32_t GetDirtyDish (const char* buf, type_t* dishes, size_t* num);
 
 int Wash (const time_exe_t time)
 {
@@ -15,10 +15,13 @@ dishes_array GetDirtyDishes (const char* dirty_dishes_file)
 
     uint32_t cur_dish_num = 0;
     uint32_t i = 0;
+    size_t num = 0;
     while (buffer [i] == '<')
     {
-        i += GetDirtyDish(buffer + i, dishes_types + cur_dish_num);
-        cur_dish_num++;
+        //PRINT_LINE
+        i += GetDirtyDish(buffer + i, dishes_types + cur_dish_num, &num);
+        //PRINT_LINE
+        cur_dish_num += num;
         i++;//skip \n
     }
     //printf ("num of dirty dishes = %d\n", cur_dish_num);
@@ -26,7 +29,7 @@ dishes_array GetDirtyDishes (const char* dirty_dishes_file)
     return result;
 }
 
-static uint32_t GetDirtyDish (const char* buf, type_t* dish)//<,> - fake
+static uint32_t GetDirtyDish (const char* buf, type_t* dishes, size_t* num)//<,> - fake
 {
     uint32_t cunt = 0, i = 0;
     char dish_name[MAX_LEN_OF_TYPES_NAME] = {};
@@ -47,18 +50,28 @@ static uint32_t GetDirtyDish (const char* buf, type_t* dish)//<,> - fake
     }
     
     strcat (dish_name, "\0");
-    *dish = HASH_DISHE_TYPE (dish_name, strlen(dish_name));
+    uint32_t tmp = HASH_DISHE_TYPE (dish_name, strlen(dish_name));
+    
     cunt++; //skip '>'
 
     if (buf[cunt] == ':') cunt++;//skip ':'
     else assert("wrong reading" && NULL);
 
     if (buf[cunt] == '<') cunt++;//reading "<time>"
+    
     else assert("wrong reading" && NULL);
-    //dish->time_exe = atoi(buf + cunt);
+    *num = atoi(buf + cunt);
     while (buf[cunt] != '>') cunt++;
+    
     cunt++; //skip '>'
-
+    //printf("dish %u num is %lu\n", tmp, *num);
+    //PRINT_LINE
+    for (int iter = 0; iter < *num; iter++)
+    {
+        dishes[iter] = tmp;
+        //printf ("I am not crazy and iter = %d  < %d = num\n", iter, *num);
+    }
+    //PRINT_LINE
     return cunt;
 }
 
