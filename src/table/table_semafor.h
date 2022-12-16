@@ -16,7 +16,7 @@
 
 #include "table.h"
 
-#define FILE_NAME "/home/princep/PROGS/Computers_teq/TaskTwoZadavalnik/TheOne/file" 
+//#define FILE_NAME "tmp/file" 
 
 //size_t num_dishes_on_table = 0;
 
@@ -198,10 +198,10 @@ static types_array GetTypesArray ()
 
 static int SentTypesArray (const types_array table)
 {
-    FILE *file = fopen("file", "w");
-    fclose(file);
+    //FILE *file = fopen("file", "w");
+    //fclose(file);
     
-    int file_id = open (FILE_NAME, O_WRONLY);
+    int file_id = open (FILE_NAME, O_WRONLY | O_TRUNC);
     if (file_id == -1)
     {
         assert ("File not opened!" && NULL);

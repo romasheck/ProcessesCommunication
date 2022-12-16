@@ -17,6 +17,8 @@ int main ()
         cur_dish_t = TakeDish();
         //printf("i whipping dish %u\n", cur_dish_t);
         Whip(TIME_EXE(cur_dish_t));
+
+        printf("i whiped dish %u\n", cur_dish_t);
     }
     
     return 0;

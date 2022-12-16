@@ -11,7 +11,7 @@ int main ()
     dishes_array dirty_dishes = GetDirtyDishes(DIRTY_DISHES_FILE);
 
     //PRINT_DISHES_TYPES;
-    PrintDirtyDishes(dirty_dishes);
+    //PrintDirtyDishes(dirty_dishes);
     //printf ("num of dirty dishes eq %d\n", dirty_dishes.dishes_num);
 
     StartTableWork(WASHER_P);
@@ -21,7 +21,7 @@ int main ()
         WaitingWhileTableFull();
         
         Wash(TIME_EXE(TYPE(i)));
-        //printf ("I washed dish %u\n", TYPE(i));
+        printf ("I washed dish %u\n", TYPE(i));
         PutDish(TYPE(i));
     }
     //free (dishes_types); //no, 'cause dishes_types is static memory

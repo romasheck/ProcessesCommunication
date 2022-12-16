@@ -6,6 +6,7 @@
 #include <inttypes.h>
 
 #define TABLE_LIMIT 100
+#define FILE_NAME "tmp/file"
 
 typedef uint32_t type_t;
 
@@ -18,7 +19,7 @@ enum PROCESS
 
 int         StartTableWork          (const int process);
 
-int         TableStatus             ();
+//int         TableStatus             ();
 
 int         WaitingWhileTableFull   ();
 

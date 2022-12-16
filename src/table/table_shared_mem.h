@@ -10,17 +10,16 @@
 
 #include "table.h"
 
-#define FILE_NAME "tmp/file"
-
+//#define FILE_NAME "tmp/file"
+/*
 typedef struct
 {
     int     flag;
     size_t  num;    
     type_t* types;
 } types_array;
-
+*/
 #define ARRAY_SZ sizeof(int) + sizeof(size_t) + TABLE_LIMIT*sizeof(type_t)
-
 #define PROC_FLAG   *(int*)shm_ptr
 #define DISHES_NUM  *(size_t*)(shm_ptr+sizeof(int))
 #define DISHES(i)   *((type_t*)(shm_ptr+sizeof(int)+sizeof(size_t))+i)
@@ -34,7 +33,7 @@ static type_t       PopDish         ();
 //static int          GetProcFlag     ();
 //static type_t*      GetDishes       ();
 
-static int      shmid = 0;
+//static int      shmid = 0;
 static void*    shm_ptr = NULL; 
 
 int StartTableWork(const int process)
@@ -61,7 +60,7 @@ int StartTableWork(const int process)
         break;
     }
 
-    shmid = shmget (key, ARRAY_SZ, proc_flag);
+    int shmid = shmget (key, ARRAY_SZ, proc_flag);
     if (shmid < 0)
     {
         printf ("errno = %d\n",  errno);
@@ -128,7 +127,7 @@ type_t TakeDish ()
     printf("before poping, on the table %d dishes:\n %s\n", DISHES_NUM, (char*)DISHES_STR);
     type_t res = PopDish();
     //printf("before poping, on the table %d dishes:\n %s\n", DISHES_NUM, (char*)DISHES_STR);
-    printf("dish %u was popped\n", res);
+    printf("dish %u was poped\n", res);
     PROC_FLAG = NOT_A_P;
     
     return res;
