@@ -2,8 +2,8 @@
 #include "table_semafor.h"
 #endif
 
-#ifdef PIPE
-#include "table_pipe.h"
+#ifdef FIFO
+#include "table_fifo.h"
 #endif
 
 #ifdef MSG
