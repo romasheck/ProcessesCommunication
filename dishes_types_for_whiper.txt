@@ -1,0 +1,3 @@
+<dish>:<1>
+<nedish>:<3>
+<adish>:<1>

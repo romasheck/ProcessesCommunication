@@ -10,7 +10,11 @@
 
 #include "table.h"
 
+#define PRINT_LINE printf("I am at the line %d\n", __LINE__);
+
 #define FIFO_NAME "tmp/table_fifo"
+
+#define TABLE_LIMIT atoi(getenv("TABLE_LIMIT"))
 
 static size_t* shm_ptr;
 #define TABLE_FULL  *shm_ptr==TABLE_LIMIT
@@ -18,7 +22,7 @@ static size_t* shm_ptr;
 #define TABLE_ADD   *shm_ptr+=1
 #define TABLE_SUB   *shm_ptr-=1
 
-int fd;
+static int fd = 0;
 
 int StartTableWork (const int process)
 {
@@ -33,7 +37,13 @@ int StartTableWork (const int process)
     switch (process)
     {
     case WASHER_P:
+
         proc_flag = 0666 | IPC_CREAT;
+        if (mknod(FIFO_NAME, S_IFIFO | 0666, 0) < 0)
+        { 
+            assert("wrong mknod" && NULL);
+        }
+        sleep(2);
         break;
 
     case WHIPER_P:
@@ -57,18 +67,21 @@ int StartTableWork (const int process)
     {
         assert("wrong shmat" && NULL);
     }
-
-    fd = open (FIFO_NAME, O_WRONLY);
+    //PRINT_LINE
+    int fd = open (FIFO_NAME, O_WRONLY | O_SYNC);
     if (fd < 0)
     {
-        assert("wrong fifo opening");
+        perror("open() ");
+        assert("wrong fifo opening" && NULL);
     }
-
+    //PRINT_LINE
     return 0;
 }
 
 int WaitingWhileTableFull ()
 {
+    //PRINT_LINE
+    printf ("on the table %d\n", *shm_ptr);
     while (TABLE_FULL);
 
     return 0;
@@ -76,7 +89,7 @@ int WaitingWhileTableFull ()
 
 int WaitingWhileTableEmpty ()
 {
-    printf ("on the table %d dishes\n", *shm_ptr);
+    //printf ("on the table %d dishes\n", *shm_ptr);
     while (TABLE_EMPTY);
 
     return 0;
@@ -84,9 +97,12 @@ int WaitingWhileTableEmpty ()
 
 int PutDish (const type_t type)
 {
+    //PRINT_LINE
+    
     int written_sz = write (fd, &type, sizeof(type));
     if(written_sz != sizeof(type))
     {
+        printf ("wr_sz = %d\n", written_sz);
         assert("written sizes different" && NULL);
     }
 
@@ -100,7 +116,7 @@ int PutDish (const type_t type)
 type_t TakeDish ()
 {
     type_t res = 0;
-    
+    printf("on the table %d dishes\n", *shm_ptr);
     int red_sz = read (fd, &res, sizeof(res));
     if(red_sz = sizeof(res))
     {

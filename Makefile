@@ -57,7 +57,7 @@ clean_out:
 	rm $(OUT_DIR)/*
 
 clean_tmp:
-	ipcrm
+	ipcrm --all=shm
 	cat $(TMP_DIR)/emty > $(TMP_DIR)/file
 
 clean_all: clean_obj clean_out clean_tmp

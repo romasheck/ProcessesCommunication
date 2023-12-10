@@ -11,11 +11,14 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <string.h>
 
 //#include "file_work.h"
 
 #include "table.h"
 
+#define TABLE_LIMIT atoi(getenv("TABLE_LIMIT"))
+//static const int TABLE_LIMIT = atoi(getenv("TABLE_LIMIT"));
 //#define FILE_NAME "tmp/file" 
 
 //size_t num_dishes_on_table = 0;
@@ -38,6 +41,8 @@ static int semid = 0;
 
 static int sem_op(int i, int op)               
 {
+    //printf ("table limit is %d\n", TABLE_LIMIT);
+
     struct sembuf mybuf = {};
 
     printf ("semid = %d, sem_num = %d, sem_op = %d \n", semid, i, op);
@@ -159,7 +164,7 @@ static type_t PopDish ()
 
 static types_array GetTypesArray ()
 {
-    int file_id = open (FILE_NAME, O_RDONLY);
+    int file_id = open (FILE_NAME, O_RDONLY | O_SYNC);
     if (file_id == -1)
     {
         assert ("File not opened!" && NULL);
@@ -201,7 +206,7 @@ static int SentTypesArray (const types_array table)
     //FILE *file = fopen("file", "w");
     //fclose(file);
     
-    int file_id = open (FILE_NAME, O_WRONLY | O_TRUNC);
+    int file_id = open (FILE_NAME, O_WRONLY | O_TRUNC | O_SYNC);
     if (file_id == -1)
     {
         assert ("File not opened!" && NULL);

@@ -14,13 +14,14 @@ int main ()
     //PRINT_DISHES_TYPES;
     //PrintDirtyDishes(dirty_dishes);
     //printf ("num of dirty dishes eq %d\n", dirty_dishes.dishes_num);
-
+    //PRINT_LINE
     StartTableWork(WASHER_P);
+    //PRINT_LINE
     for (int i = 0; i < dirty_dishes.dishes_num; i++)
     {
         //printf("iteration number %d\n", i);
         WaitingWhileTableFull();
-        
+        //PRINT_LINE
         Wash(TIME_EXE(TYPE(i)));
         printf ("I washed dish %u\n", TYPE(i));
         PutDish(TYPE(i));

@@ -5,7 +5,8 @@
 //#include <stdlib.h>
 #include <inttypes.h>
 
-#define TABLE_LIMIT 100
+//#define TABLE_LIMIT 3
+
 #define FILE_NAME "tmp/file"
 
 typedef uint32_t type_t;
